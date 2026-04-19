@@ -39,6 +39,7 @@ interface Props {
 export function InputForm({ onCalculate }: Props) {
   const [inputs, setInputs] = useState<UserInputs>(DEFAULT_INPUTS);
   const [flourSum, setFlourSum] = useState(100);
+  const [selectedFramework, setSelectedFramework] = useState<string | null>(null);
 
   function set<K extends keyof UserInputs>(key: K, value: UserInputs[K]) {
     setInputs((prev) => ({ ...prev, [key]: value }));
@@ -69,6 +70,7 @@ export function InputForm({ onCalculate }: Props) {
 
     const sum = entries.reduce((a, e) => a + e.percentage, 0);
     setFlourSum(sum);
+    setSelectedFramework(fwId);
     setInputs((prev) => ({ ...prev, bigaPct, flourEntries: entries }));
   }
 
@@ -78,6 +80,7 @@ export function InputForm({ onCalculate }: Props) {
     );
     setInputs((prev) => ({ ...prev, flourEntries: updated }));
     setFlourSum(updated.reduce((a, e) => a + (Number(e.percentage) || 0), 0));
+    setSelectedFramework(null);
   }
 
   function addFlourEntry() {
@@ -85,12 +88,14 @@ export function InputForm({ onCalculate }: Props) {
     const available = FLOUR_DATABASE.find(f => !usedIds.includes(f.id));
     const newEntry: FlourEntry = { flourId: available?.id || FLOUR_DATABASE[0].id, percentage: 0 };
     setInputs((prev) => ({ ...prev, flourEntries: [...prev.flourEntries, newEntry] }));
+    setSelectedFramework(null);
   }
 
   function removeFlourEntry(idx: number) {
     const updated = inputs.flourEntries.filter((_, i) => i !== idx);
     setInputs((prev) => ({ ...prev, flourEntries: updated }));
     setFlourSum(updated.reduce((a, e) => a + e.percentage, 0));
+    setSelectedFramework(null);
   }
 
   const num = (v: string) => parseFloat(v) || 0;
@@ -104,18 +109,30 @@ export function InputForm({ onCalculate }: Props) {
           Apply a pre-built flour framework based on your available flours and process goal.
         </p>
         <div className="grid grid-cols-1 gap-2">
-          {CANOTTO_FRAMEWORKS.map((fw) => (
-            <button
-              key={fw.id}
-              onClick={() => applyFramework(fw.id)}
-              className="text-left p-3 rounded-lg border border-stone-700/60 hover:border-amber-500/50 hover:bg-stone-800 transition-all group"
-            >
-              <div className="text-sm font-medium text-stone-200 group-hover:text-amber-300">
-                {fw.name}
-              </div>
-              <div className="text-xs text-stone-500 mt-0.5">{fw.description}</div>
-            </button>
-          ))}
+          {CANOTTO_FRAMEWORKS.map((fw) => {
+            const isActive = selectedFramework === fw.id;
+            return (
+              <button
+                key={fw.id}
+                onClick={() => applyFramework(fw.id)}
+                className={`text-left p-3 rounded-lg border transition-all group ${
+                  isActive
+                    ? 'border-amber-500/60 bg-amber-950/25'
+                    : 'border-stone-700/60 hover:border-amber-500/50 hover:bg-stone-800'
+                }`}
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <div className={`text-sm font-medium ${isActive ? 'text-amber-300' : 'text-stone-200 group-hover:text-amber-300'}`}>
+                    {fw.name}
+                  </div>
+                  {isActive && (
+                    <span className="text-xs text-amber-400 shrink-0">✓ Applied</span>
+                  )}
+                </div>
+                <div className="text-xs text-stone-500 mt-0.5">{fw.description}</div>
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -148,6 +165,11 @@ export function InputForm({ onCalculate }: Props) {
       {/* Flour Blend */}
       <div className="card">
         <SectionHeading>Flour Blend</SectionHeading>
+        {selectedFramework && (
+          <p className="text-xs text-amber-500/60 -mt-2 mb-3">
+            Framework {selectedFramework} applied — edit freely below
+          </p>
+        )}
         <div className="space-y-3">
           {inputs.flourEntries.map((entry, idx) => (
             <div key={idx} className="flex gap-3 items-end">

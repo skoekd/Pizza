@@ -99,14 +99,11 @@ export const CANOTTO_FRAMEWORKS = [
   },
   {
     id: 'C',
-    name: 'Framework C — Flavor accent with Aroma cameo',
+    name: 'Framework C — Accessible (no La 8 Plus needed)',
     description:
-      'Biga: 100% La 8 Plus · Refresh: 85% Caputo Blue + 15% Casillo Aroma. Best for 48h where wheat complexity is priority.',
-    bigaFlours: [{ id: 'casillo_la8', pct: 100 }],
-    refreshFlours: [
-      { id: 'caputo_blue', pct: 85 },
-      { id: 'casillo_aroma', pct: 15 },
-    ],
+      'Biga: 100% Casillo Pizza Superiore · Refresh: 100% Caputo Blue. Effective blend W≈305, P/L≈0.55. More forgiving fermentation window. Best for 48h when La 8 Plus is unavailable.',
+    bigaFlours: [{ id: 'casillo_superiore', pct: 100 }],
+    refreshFlours: [{ id: 'caputo_blue', pct: 100 }],
   },
   {
     id: 'D',
