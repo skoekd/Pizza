@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+@layer base {
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #0f0e0c;
+    color: #f0ede8;
+    min-height: 100vh;
+  }
+  #root { min-height: 100vh; }
+}
+
+@layer components {
+  .card { @apply bg-stone-900 border border-stone-700/50 rounded-xl p-5; }
+  .input-field {
+    @apply w-full bg-stone-800 border border-stone-600 rounded-lg px-3 py-2 text-stone-100
+           text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500
+           transition-colors placeholder-stone-500;
+  }
+  .select-field {
+    @apply w-full bg-stone-800 border border-stone-600 rounded-lg px-3 py-2 text-stone-100
+           text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500
+           transition-colors cursor-pointer;
+  }
+  .label { @apply block text-xs font-medium text-stone-400 mb-1.5 uppercase tracking-wider; }
+  .section-title { @apply text-xs font-bold text-amber-400 uppercase tracking-widest mb-3; }
+  .btn-primary {
+    @apply bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold px-8 py-3 rounded-xl
+           text-sm transition-all cursor-pointer shadow-lg shadow-amber-900/30;
+  }
+  .btn-secondary {
+    @apply bg-stone-700 hover:bg-stone-600 text-stone-100 font-medium px-5 py-2 rounded-lg
+           text-sm transition-colors cursor-pointer;
+  }
+  .warning-box {
+    @apply border border-amber-500/40 bg-amber-950/30 rounded-lg p-3 text-amber-200 text-sm leading-relaxed;
+  }
+  .error-box {
+    @apply border border-red-500/40 bg-red-950/30 rounded-lg p-3 text-red-200 text-sm leading-relaxed;
+  }
+  .note-box {
+    @apply border border-blue-500/30 bg-blue-950/20 rounded-lg p-3 text-blue-200 text-sm leading-relaxed;
+  }
+  .success-box {
+    @apply border border-emerald-500/30 bg-emerald-950/20 rounded-lg p-3 text-emerald-200 text-sm leading-relaxed;
+  }
+  .result-row { @apply flex justify-between items-baseline py-2 border-b border-stone-800/70; }
+  .result-label { @apply text-stone-400 text-sm; }
+  .result-value { @apply text-stone-100 text-sm font-mono font-medium; }
+  .result-value-highlight { @apply text-amber-300 font-mono font-bold; }
+  .checklist-item { @apply flex gap-2 py-1 text-sm text-stone-300; }
+  .step-block { @apply border-l-2 border-amber-600/40 pl-4 mb-4; }
+}
