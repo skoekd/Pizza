@@ -187,6 +187,16 @@ export function buildWarnings(
     );
   }
 
+  // Oil disabled — crispiness note
+  if (!inputs.oilEnabled) {
+    push(
+      'no_oil',
+      'note',
+      'No oil — reduced crispiness',
+      `Olive oil in the refresh is the primary driver of canotto crunch. Without it, high hydration produces a soft, airy rim rather than a crispy one. Gigi-style uses ~7% olive oil. Even 2–3% makes a measurable difference to browning and base crunch.`,
+    );
+  }
+
   // ADY reminder
   if (inputs.yeastType === 'ady') {
     push(

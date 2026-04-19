@@ -187,8 +187,8 @@ export function calcTemperatures(inputs: UserInputs, _weights: Weights): Tempera
   const fridgeTemp = toC(fridgeTempInput, tempUnit);
   const ff = frictionFactor(mixerType);
 
-  // Biga water temp: M=3, target exit 19°C
-  let bigaWaterTemp = 57 - flourTemp - roomTemp - ff;
+  // Biga water temp: M=3, target exit 23°C (contemporary canotto per Gigi protocol)
+  let bigaWaterTemp = 69 - flourTemp - roomTemp - ff;
   bigaWaterTemp = round1(bigaWaterTemp);
   const useIceForBiga = bigaWaterTemp < 4;
   const bigaIceFraction = useIceForBiga
@@ -196,10 +196,10 @@ export function calcTemperatures(inputs: UserInputs, _weights: Weights): Tempera
     : 0;
   bigaWaterTemp = Math.max(0, bigaWaterTemp);
 
-  // Final dough water temp: M=3, target FDT 24°C + cold biga offset
+  // Final dough water temp: M=3, target FDT 23°C + cold biga offset
   const bigaDec = bigaPct / 100;
   let finalWaterTemp =
-    72 - flourTemp - roomTemp - ff + (roomTemp - fridgeTemp) * bigaDec;
+    69 - flourTemp - roomTemp - ff + (roomTemp - fridgeTemp) * bigaDec;
   finalWaterTemp = round1(finalWaterTemp);
 
   // Clamp to safe range
@@ -213,8 +213,8 @@ export function calcTemperatures(inputs: UserInputs, _weights: Weights): Tempera
     bigaWater: bigaWaterClamped,
     finalDoughWater: finalWaterClamped,
     frictionFactor: ff,
-    targetBigaExit: 19,
-    targetFDT: 24,
+    targetBigaExit: 23,
+    targetFDT: 23,
     bigaYeastPct,
     refreshYeastPct,
     useIceForBiga,
