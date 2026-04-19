@@ -196,10 +196,10 @@ export function calcTemperatures(inputs: UserInputs, _weights: Weights): Tempera
     : 0;
   bigaWaterTemp = Math.max(0, bigaWaterTemp);
 
-  // Final dough water temp: M=3, target FDT 24°C + cold biga offset
+  // Final dough water temp: M=3, target FDT 23°C + cold biga offset
   const bigaDec = bigaPct / 100;
   let finalWaterTemp =
-    72 - flourTemp - roomTemp - ff + (roomTemp - fridgeTemp) * bigaDec;
+    69 - flourTemp - roomTemp - ff + (roomTemp - fridgeTemp) * bigaDec;
   finalWaterTemp = round1(finalWaterTemp);
 
   // Clamp to safe range
@@ -214,7 +214,7 @@ export function calcTemperatures(inputs: UserInputs, _weights: Weights): Tempera
     finalDoughWater: finalWaterClamped,
     frictionFactor: ff,
     targetBigaExit: 23,
-    targetFDT: 24,
+    targetFDT: 23,
     bigaYeastPct,
     refreshYeastPct,
     useIceForBiga,
