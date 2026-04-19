@@ -1,23 +1,6 @@
 import type { UserInputs, ScheduleStage } from '../types';
 import { toC, roomTempModifier, adjustedTime } from './calculations';
 
-interface PuntataMinutes {
-  base: number;
-  min: number;
-  max: number;
-}
-
-function puntataBase(pref: string): PuntataMinutes {
-  if (pref === 'short') return { base: 52, min: 45, max: 60 };
-  if (pref === 'long') return { base: 105, min: 90, max: 120 };
-  return { base: 75, min: 60, max: 90 };
-}
-
-function aprettoBase(pref: string): { base: number; label: string } {
-  if (pref === 'short') return { base: 105, label: '1.5–2h' };
-  if (pref === 'long') return { base: 210, label: '3–4h' };
-  return { base: 150, label: '2–3h' };
-}
 
 function fmt(minutes: number): string {
   if (minutes < 60) return `${minutes} min`;
@@ -32,14 +15,12 @@ export function buildSchedule(inputs: UserInputs): ScheduleStage[] {
   const modifier = roomTempModifier(roomC);
   const timeline = inputs.timeline;
 
-  const { base: puntataBase_ } = puntataBase(inputs.puntata);
-  const adjPuntata = adjustedTime(puntataBase_, modifier);
-  const { base: aprettoBase_ } = aprettoBase(inputs.appretto);
-  const adjAppretto = adjustedTime(aprettoBase_, modifier);
+  const adjPuntata = adjustedTime(Math.round(inputs.puntata * 60), modifier);
+  const adjAppretto = adjustedTime(Math.round(inputs.appretto * 60), modifier);
 
   const stages: ScheduleStage[] = [];
 
-  if (timeline === 24) {
+  if (timeline <= 36) {
     stages.push({
       label: '1. Mix Biga',
       offset: '−24h',
@@ -120,7 +101,7 @@ export function buildSchedule(inputs: UserInputs): ScheduleStage[] {
     });
   }
 
-  if (timeline === 48) {
+  if (timeline > 36 && timeline <= 60) {
     stages.push({
       label: '1. Mix Biga',
       offset: '−48h',
@@ -189,7 +170,7 @@ export function buildSchedule(inputs: UserInputs): ScheduleStage[] {
     });
   }
 
-  if (timeline === 72) {
+  if (timeline > 60) {
     stages.push({
       label: '1. Mix Biga',
       offset: '−72h',
