@@ -296,7 +296,7 @@ export function InputForm({ onCalculate }: Props) {
           <div className="flex items-end">
             <p className="text-xs text-stone-500 leading-relaxed">
               Conversion: 1g Fresh = 0.33g IDY = 0.40g ADY.<br />
-              <span className="text-amber-500/80">In practice, 1g IDY often behaves closer to 2g Fresh in warm environments.</span>
+              <span className="text-amber-500/80">Contemporary recipes (Gigi-style) use ~0.8% IDY in the biga — 3× more than traditional canotto. This is intentional: higher yeast with a 23°C biga exit drives faster gas production suited to his process. The calculator uses conservative amounts; scale up if following a high-yeast protocol.</span>
             </p>
           </div>
         </div>
@@ -316,7 +316,7 @@ export function InputForm({ onCalculate }: Props) {
               <input type="checkbox" className="w-4 h-4 accent-amber-500"
                 checked={inputs.oilEnabled}
                 onChange={e => set('oilEnabled', e.target.checked)} />
-              <input type="number" min={0} max={3} step={0.5} className="input-field"
+              <input type="number" min={0} max={8} step={0.5} className="input-field"
                 disabled={!inputs.oilEnabled} value={inputs.oilPct}
                 onChange={e => set('oilPct', num(e.target.value))} />
               <span className="text-stone-400 text-sm">%</span>

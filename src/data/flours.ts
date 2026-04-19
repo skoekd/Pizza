@@ -2,6 +2,34 @@ import type { Flour } from '../types';
 
 export const FLOUR_DATABASE: Flour[] = [
   {
+    id: 'caputo_manitoba',
+    name: 'Caputo Manitoba Oro',
+    w: 390,
+    pl: 0.57,
+    protein: 15.0,
+    fn: 310,
+    stability: 18,
+    type: '0',
+    notes:
+      'Gigi-style biga flour. Exceptional W390 strength survives 48h+ biga with room-temp start. Very long stability (18 min) handles high-yeast contemporary protocols. Too strong for refresh — dough becomes unworkable.',
+    canUseInBiga: true,
+    canUseInRefresh: false,
+  },
+  {
+    id: 'caputo_nuvola',
+    name: 'Caputo Nuvola',
+    w: 270,
+    pl: 0.50,
+    protein: 12.5,
+    fn: 350,
+    stability: 9,
+    type: '0',
+    notes:
+      'Gigi-style refresh flour. Type 0 with P/L 0.50 — ideal extensibility for canotto rim inflation. High gas retention creates the signature open, cloud-like crumb. Pairs with Manitoba biga for maximum oven spring.',
+    canUseInBiga: false,
+    canUseInRefresh: true,
+  },
+  {
     id: 'caputo_blue',
     name: 'Caputo Blue (Pizzeria 00)',
     w: 270,
@@ -112,5 +140,13 @@ export const CANOTTO_FRAMEWORKS = [
       'All flour in biga as La 8 Plus at 44-48% hydration. Refresh = water + salt only. Maximum flavor complexity, tightest margin. For experienced bakers, 48-72h.',
     bigaFlours: [{ id: 'casillo_la8', pct: 100 }],
     refreshFlours: [],
+  },
+  {
+    id: 'E',
+    name: 'Framework E — Gigi-style (Manitoba + Nuvola)',
+    description:
+      'Biga: 100% Caputo Manitoba Oro · Refresh: 100% Caputo Nuvola. Blend W≈330, P/L≈0.53. Contemporary canotto — high yeast (0.8% IDY biga), 48h, oil in refresh. Maximum oven spring and open crumb.',
+    bigaFlours: [{ id: 'caputo_manitoba', pct: 100 }],
+    refreshFlours: [{ id: 'caputo_nuvola', pct: 100 }],
   },
 ];
