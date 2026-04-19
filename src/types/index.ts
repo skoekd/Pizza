@@ -2,10 +2,10 @@ export type TempUnit = 'C' | 'F';
 export type YeastType = 'fresh' | 'idy' | 'ady';
 export type MixerType = 'hand' | 'fork' | 'spiral' | 'planetary' | 'planetary_long';
 export type OvenType = 'wood' | 'gas_pizza' | 'home_steel' | 'home_no_steel';
-export type Timeline = 24 | 48 | 72;
+export type Timeline = number;
 export type BigaPct = 20 | 30 | 50 | 70 | 100;
-export type PuntataType = 'short' | 'standard' | 'long';
-export type AprettoType = 'short' | 'standard' | 'long';
+export type PuntataType = number; // hours
+export type AprettoType = number; // hours
 
 export interface Flour {
   id: string;

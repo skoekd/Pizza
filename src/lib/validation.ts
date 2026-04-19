@@ -46,7 +46,7 @@ export function buildWarnings(
   }
 
   // 4B — W vs timeline
-  if (blend.w < 280 && inputs.timeline === 72) {
+  if (blend.w < 280 && inputs.timeline > 60) {
     push(
       'w_too_weak_72',
       'error',
@@ -54,7 +54,7 @@ export function buildWarnings(
       `This flour blend (W ${blend.w}) is too weak for a 72h process. Maximum recommended: 24-36h. Use W 330+ for 72h.`,
     );
   }
-  if (blend.w < 300 && inputs.timeline === 48) {
+  if (blend.w < 300 && inputs.timeline > 36 && inputs.timeline <= 60) {
     push(
       'w_marginal_48',
       'warning',
@@ -62,7 +62,7 @@ export function buildWarnings(
       `W ${blend.w} is marginal for a 48h process. Monitor biga pH closely. Reduce biga duration if pH drops below 5.0 before scheduled refresh.`,
     );
   }
-  if (blend.w > 340 && inputs.timeline === 24) {
+  if (blend.w > 340 && inputs.timeline <= 36) {
     push(
       'w_strong_24',
       'warning',

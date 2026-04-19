@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { UserInputs, FlourEntry, TempUnit, YeastType, MixerType, OvenType, Timeline, PuntataType, AprettoType } from '../../types';
+import type { UserInputs, FlourEntry, TempUnit, YeastType, MixerType, OvenType } from '../../types';
 import { FLOUR_DATABASE, CANOTTO_FRAMEWORKS } from '../../data/flours';
 import { FieldRow, SectionHeading } from '../shared/FieldRow';
 
@@ -14,8 +14,8 @@ const DEFAULT_INPUTS: UserInputs = {
   bigaHydration: 48,
   totalHydration: 72,
   timeline: 48,
-  puntata: 'standard',
-  appretto: 'standard',
+  puntata: 1.25,
+  appretto: 2.5,
   flourEntries: [
     { flourId: 'casillo_la8', percentage: 50 },
     { flourId: 'caputo_blue', percentage: 50 },
@@ -232,13 +232,9 @@ export function InputForm({ onCalculate }: Props) {
             <input type="number" min={200} max={400} className="input-field" value={inputs.ballWeight}
               onChange={e => set('ballWeight', num(e.target.value))} />
           </FieldRow>
-          <FieldRow label="Process Timeline">
-            <select className="select-field" value={inputs.timeline}
-              onChange={e => set('timeline', num(e.target.value) as Timeline)}>
-              <option value={24}>24h</option>
-              <option value={48}>48h</option>
-              <option value={72}>72h</option>
-            </select>
+          <FieldRow label="Process Timeline" hint="Hours (e.g. 24, 48, 72)">
+            <input type="number" min={12} max={120} step={1} className="input-field" value={inputs.timeline}
+              onChange={e => set('timeline', num(e.target.value))} />
           </FieldRow>
           <FieldRow label="Biga %" hint="% of total flour in biga">
             <input type="number" min={10} max={100} className="input-field" value={inputs.bigaPct}
@@ -252,21 +248,13 @@ export function InputForm({ onCalculate }: Props) {
             <input type="number" min={60} max={90} className="input-field" value={inputs.totalHydration}
               onChange={e => set('totalHydration', num(e.target.value))} />
           </FieldRow>
-          <FieldRow label="Puntata (Bulk)" hint="Room temp bulk rest">
-            <select className="select-field" value={inputs.puntata}
-              onChange={e => set('puntata', e.target.value as PuntataType)}>
-              <option value="short">Short (45–60 min)</option>
-              <option value="standard">Standard (60–90 min)</option>
-              <option value="long">Long (90–120 min)</option>
-            </select>
+          <FieldRow label="Puntata (Bulk)" hint="Hours, typical 0.75–2h">
+            <input type="number" min={0.25} max={4} step={0.25} className="input-field" value={inputs.puntata}
+              onChange={e => set('puntata', num(e.target.value))} />
           </FieldRow>
-          <FieldRow label="Appretto (Final Proof)" hint="Ball room temp proof">
-            <select className="select-field" value={inputs.appretto}
-              onChange={e => set('appretto', e.target.value as AprettoType)}>
-              <option value="short">Short (1.5–2h)</option>
-              <option value="standard">Standard (2–3h)</option>
-              <option value="long">Long (3–4h)</option>
-            </select>
+          <FieldRow label="Appretto (Final Proof)" hint="Hours, typical 1.5–4h">
+            <input type="number" min={0.5} max={8} step={0.25} className="input-field" value={inputs.appretto}
+              onChange={e => set('appretto', num(e.target.value))} />
           </FieldRow>
         </div>
       </div>
