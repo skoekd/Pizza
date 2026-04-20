@@ -264,8 +264,26 @@ export function InputForm({ onCalculate }: Props) {
               onChange={e => set('timeline', num(e.target.value))} />
           </FieldRow>
           <FieldRow label="Biga %" hint="% of total flour in biga">
-            <input type="number" min={10} max={100} className="input-field" value={inputs.bigaPct}
-              onChange={e => set('bigaPct', num(e.target.value))} />
+            <div className="space-y-2">
+              <div className="flex gap-1 flex-wrap">
+                {[20, 30, 50, 70, 100].map(pct => (
+                  <button
+                    key={pct}
+                    type="button"
+                    onClick={() => set('bigaPct', pct)}
+                    className={`px-2 py-0.5 text-xs rounded border transition-colors ${
+                      inputs.bigaPct === pct
+                        ? 'border-amber-500 bg-amber-950/40 text-amber-300'
+                        : 'border-stone-700 text-stone-400 hover:border-amber-500/50 hover:text-amber-300'
+                    }`}
+                  >
+                    {pct}%
+                  </button>
+                ))}
+              </div>
+              <input type="number" min={10} max={100} className="input-field" value={inputs.bigaPct}
+                onChange={e => set('bigaPct', num(e.target.value))} />
+            </div>
           </FieldRow>
           <FieldRow label="Biga Hydration %" hint="44–50% typical for biga">
             <input type="number" min={40} max={60} className="input-field" value={inputs.bigaHydration}
