@@ -105,14 +105,15 @@ export function calcWeights(inputs: UserInputs): Weights {
   const malt = maltEnabled ? totalFlour * maltDec : 0;
 
   // 3F/3G — yeast
-  const bigaYeastFreshPct = calcBigaYeastPct(inputs.ambientTemp);
+  const bigaYeastFreshPct = inputs.bigaYeastOverrideEnabled
+    ? inputs.bigaYeastOverridePct
+    : calcBigaYeastPct(inputs.ambientTemp);
   const bigaYeastFresh = bigaFlour * (bigaYeastFreshPct / 100);
   const bigaYeast = convertYeast(bigaYeastFresh, yeastType);
 
-  const refreshYeastFreshPct = Math.max(
-    0,
-    0.2 - (bigaPct / 100) * 0.15,
-  );
+  const refreshYeastFreshPct = inputs.refreshYeastOverrideEnabled
+    ? inputs.refreshYeastOverridePct
+    : Math.max(0, 0.2 - (bigaPct / 100) * 0.15);
   const refreshYeastFresh = totalFlour * refreshYeastFreshPct;
   const refreshYeast = convertYeast(refreshYeastFresh, yeastType);
 
@@ -206,8 +207,12 @@ export function calcTemperatures(inputs: UserInputs, _weights: Weights): Tempera
   const bigaWaterClamped = Math.min(43, Math.max(0, bigaWaterTemp));
   const finalWaterClamped = Math.min(43, Math.max(0, finalWaterTemp));
 
-  const bigaYeastPct = calcBigaYeastPct(roomTemp);
-  const refreshYeastPct = round1(Math.max(0, 0.2 - bigaDec * 0.15));
+  const bigaYeastPct = inputs.bigaYeastOverrideEnabled
+    ? inputs.bigaYeastOverridePct
+    : calcBigaYeastPct(roomTemp);
+  const refreshYeastPct = inputs.refreshYeastOverrideEnabled
+    ? inputs.refreshYeastOverridePct
+    : round1(Math.max(0, 0.2 - bigaDec * 0.15));
 
   return {
     bigaWater: bigaWaterClamped,
