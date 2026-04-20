@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { UserInputs, FlourEntry, TempUnit, YeastType, MixerType, OvenType } from '../../types';
 import { FLOUR_DATABASE, CANOTTO_FRAMEWORKS } from '../../data/flours';
 import { FieldRow, SectionHeading } from '../shared/FieldRow';
+import { calcBigaYeastPct, round1 } from '../../lib/calculations';
 
 const DEFAULT_INPUTS: UserInputs = {
   tempUnit: 'C',
@@ -21,6 +22,10 @@ const DEFAULT_INPUTS: UserInputs = {
     { flourId: 'caputo_blue', percentage: 50 },
   ],
   yeastType: 'idy',
+  bigaYeastOverrideEnabled: false,
+  bigaYeastOverridePct: 1.0,
+  refreshYeastOverrideEnabled: false,
+  refreshYeastOverridePct: 0.1,
   saltPct: 2.5,
   oilEnabled: false,
   oilPct: 2,
@@ -299,6 +304,54 @@ export function InputForm({ onCalculate }: Props) {
               <span className="text-amber-500/80">Contemporary recipes (Gigi-style) use ~0.8% IDY in the biga — 3× more than traditional canotto. This is intentional: higher yeast with a 23°C biga exit drives faster gas production suited to his process. The calculator uses conservative amounts; scale up if following a high-yeast protocol.</span>
             </p>
           </div>
+          <FieldRow label="Biga Yeast %" hint="% fresh equiv. on biga flour — check to override auto">
+            <div className="flex gap-2 items-center">
+              <input type="checkbox" className="w-4 h-4 accent-amber-500"
+                checked={inputs.bigaYeastOverrideEnabled}
+                onChange={e => {
+                  if (e.target.checked) {
+                    setInputs(prev => ({
+                      ...prev,
+                      bigaYeastOverrideEnabled: true,
+                      bigaYeastOverridePct: calcBigaYeastPct(prev.ambientTemp),
+                    }));
+                  } else {
+                    set('bigaYeastOverrideEnabled', false);
+                  }
+                }} />
+              <input type="number" min={0.1} max={3} step={0.1} className="input-field"
+                disabled={!inputs.bigaYeastOverrideEnabled}
+                value={inputs.bigaYeastOverrideEnabled
+                  ? inputs.bigaYeastOverridePct
+                  : calcBigaYeastPct(inputs.ambientTemp)}
+                onChange={e => set('bigaYeastOverridePct', num(e.target.value))} />
+              <span className="text-stone-400 text-sm">%</span>
+            </div>
+          </FieldRow>
+          <FieldRow label="Refresh Yeast %" hint="% fresh equiv. on total flour — check to override auto">
+            <div className="flex gap-2 items-center">
+              <input type="checkbox" className="w-4 h-4 accent-amber-500"
+                checked={inputs.refreshYeastOverrideEnabled}
+                onChange={e => {
+                  if (e.target.checked) {
+                    setInputs(prev => ({
+                      ...prev,
+                      refreshYeastOverrideEnabled: true,
+                      refreshYeastOverridePct: round1(Math.max(0, 0.2 - (prev.bigaPct / 100) * 0.15)),
+                    }));
+                  } else {
+                    set('refreshYeastOverrideEnabled', false);
+                  }
+                }} />
+              <input type="number" min={0} max={1} step={0.05} className="input-field"
+                disabled={!inputs.refreshYeastOverrideEnabled}
+                value={inputs.refreshYeastOverrideEnabled
+                  ? inputs.refreshYeastOverridePct
+                  : round1(Math.max(0, 0.2 - (inputs.bigaPct / 100) * 0.15))}
+                onChange={e => set('refreshYeastOverridePct', num(e.target.value))} />
+              <span className="text-stone-400 text-sm">%</span>
+            </div>
+          </FieldRow>
         </div>
       </div>
 

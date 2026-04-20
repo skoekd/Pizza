@@ -49,6 +49,10 @@ export interface UserInputs {
 
   // Yeast
   yeastType: YeastType;
+  bigaYeastOverrideEnabled: boolean;
+  bigaYeastOverridePct: number;
+  refreshYeastOverrideEnabled: boolean;
+  refreshYeastOverridePct: number;
 
   // Additions
   saltPct: number;
