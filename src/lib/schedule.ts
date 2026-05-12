@@ -9,6 +9,37 @@ function fmt(minutes: number): string {
   return m === 0 ? `${h}h` : `${h}h ${m}min`;
 }
 
+function bakeDuration(floorTempC: number): { duration: string; lookFor: string } {
+  if (floorTempC >= 460) {
+    return {
+      duration: '60–90 seconds',
+      lookFor: 'STG Neapolitan profile. Rim inflates fast. Leopard spots appear in 40–50s. Rotate once at 30s.',
+    };
+  }
+  if (floorTempC >= 420) {
+    return {
+      duration: '90–150 seconds',
+      lookFor: 'Rim inflates rapidly in first 40s. Leopard spots on cornicione. Hollow tap sound when done. Rotate at 45s.',
+    };
+  }
+  if (floorTempC >= 360) {
+    return {
+      duration: '3–5 minutes',
+      lookFor: 'Lower temp = more even browning, deeper crunch. Rotate every 60–90s. Look for deep amber-brown cornicione with even colour, not just leopard spots. Base should be firm and crisp throughout.',
+    };
+  }
+  if (floorTempC >= 280) {
+    return {
+      duration: '4–7 minutes',
+      lookFor: 'Rotate every 90s. Cornicione should be deeply coloured and crisp. Tap base — hollow sound = done.',
+    };
+  }
+  return {
+    duration: '7–12 minutes',
+    lookFor: 'Home oven profile. Rotate at halfway. Base must be fully crisp before removing — check with a spatula.',
+  };
+}
+
 export function buildSchedule(inputs: UserInputs): ScheduleStage[] {
   const roomC = toC(inputs.ambientTemp, inputs.tempUnit);
   const fridgeC = toC(inputs.fridgeTemp, inputs.tempUnit);
@@ -96,8 +127,7 @@ export function buildSchedule(inputs: UserInputs): ScheduleStage[] {
       action:
         'Schiaffo (slap) or fingertip press from center outward. Keep 2–2.5cm rim untouched. Open to target disc size. Load to oven.',
       temp: `Floor ${inputs.floorTemp}°${inputs.tempUnit}, Dome ${inputs.domeTemp}°${inputs.tempUnit}`,
-      duration: '90–150 seconds',
-      lookFor: 'Rim inflates rapidly in first 40s. Leopard spots on rim. Hollow tap sound when done.',
+      ...bakeDuration(toC(inputs.floorTemp, inputs.tempUnit)),
     });
   }
 
@@ -165,8 +195,7 @@ export function buildSchedule(inputs: UserInputs): ScheduleStage[] {
       offset: '0',
       action: 'Open with schiaffo or fingertip technique. 2-2.5cm rim untouched always.',
       temp: `Floor ${inputs.floorTemp}°${inputs.tempUnit}, Dome ${inputs.domeTemp}°${inputs.tempUnit}`,
-      duration: '90–150 seconds',
-      lookFor: 'Rim inflates in first 40s. Hollow tap. Leopard spots.',
+      ...bakeDuration(toC(inputs.floorTemp, inputs.tempUnit)),
     });
   }
 
@@ -225,8 +254,7 @@ export function buildSchedule(inputs: UserInputs): ScheduleStage[] {
       offset: '0',
       action: 'Open carefully. 2-2.5cm rim always untouched.',
       temp: `Floor ${inputs.floorTemp}°${inputs.tempUnit}, Dome ${inputs.domeTemp}°${inputs.tempUnit}`,
-      duration: '90–150 seconds',
-      lookFor: 'Dramatic oven spring in 72h dough. Maximum leopard spots.',
+      ...bakeDuration(toC(inputs.floorTemp, inputs.tempUnit)),
     });
   }
 
