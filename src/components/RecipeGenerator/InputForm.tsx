@@ -460,7 +460,7 @@ export function InputForm({ onCalculate }: Props) {
               <span className="text-stone-400 text-sm">%</span>
             </div>
           </FieldRow>
-          <FieldRow label="Diastatic Malt" hint="Only if FN>350 + oven <300°C">
+          <FieldRow label="Diastatic Malt" hint="Home oven only. Never with gas or wood pizza oven.">
             <div className="flex gap-2 items-center">
               <input type="checkbox" className="w-4 h-4 accent-amber-500"
                 checked={inputs.maltEnabled}

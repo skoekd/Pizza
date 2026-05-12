@@ -72,12 +72,16 @@ export function buildWarnings(
   }
 
   // 4C — FN warnings
-  if (blend.fn > 360 && toC(inputs.floorTemp, inputs.tempUnit) < 300) {
+  if (
+    blend.fn > 360 &&
+    toC(inputs.floorTemp, inputs.tempUnit) < 300 &&
+    (inputs.ovenType === 'home_steel' || inputs.ovenType === 'home_no_steel')
+  ) {
     push(
       'fn_high_low_oven',
       'warning',
       'High FN + low oven temperature',
-      `High FN ${blend.fn} (low amylase activity) means your crust may bake pale at oven temperatures below 300°C. Consider adding 0.2–0.3% diastatic malt.`,
+      `High FN ${blend.fn} (low amylase activity) means your crust may bake pale at oven temperatures below 300°C. Consider adding 0.1–0.2% diastatic malt.`,
     );
   }
   if (blend.fn < 250) {
@@ -88,18 +92,33 @@ export function buildWarnings(
       `FN ${blend.fn} indicates high amylase activity. With long fermentation this may produce gummy, sticky dough. Reduce fermentation time or use higher FN flour.`,
     );
   }
-  if (
-    blend.fn > 300 &&
-    inputs.maltEnabled &&
-    inputs.maltPct > 0.3 &&
-    toC(inputs.floorTemp, inputs.tempUnit) > 380
-  ) {
-    push(
-      'malt_unnecessary',
-      'note',
-      'Malt likely unnecessary',
-      `Malt addition is likely unnecessary at these oven temperatures with FN ${blend.fn}. Risk of over-browning. Consider reducing to 0.1% or removing.`,
-    );
+  if (inputs.maltEnabled) {
+    const floorC = toC(inputs.floorTemp, inputs.tempUnit);
+    const isHighTempOven = inputs.ovenType === 'gas_pizza' || inputs.ovenType === 'wood';
+    const isHomeOven = inputs.ovenType === 'home_steel' || inputs.ovenType === 'home_no_steel';
+
+    if (isHighTempOven) {
+      push(
+        'malt_gas_wood',
+        'error',
+        'Malt not appropriate with gas or wood pizza oven',
+        `Diastatic malt is incompatible with high-temperature gas and wood ovens (400–500°C). At these temperatures the crust sets in under 2 minutes — malt enzymes cause rapid over-browning and bitter char before oven spring completes. Your flours (FN ${blend.fn}) already have sufficient amylase for these bake conditions. Remove malt.`,
+      );
+    } else if (isHomeOven && blend.fn <= 350) {
+      push(
+        'malt_fn_low',
+        'warning',
+        'Malt risky — blend FN already low',
+        `Your flour blend FN of ${blend.fn} already has adequate amylase activity. Adding diastatic malt risks gummy crumb and over-enzymatic breakdown during the longer home oven bake. Only use malt when FN exceeds 380.`,
+      );
+    } else if (isHomeOven && floorC > 300) {
+      push(
+        'malt_home_hot',
+        'warning',
+        'Malt marginal at this home oven temperature',
+        `Malt benefits are most reliable below 280°C where the longer bake gives enzymes time to work without burning. Above 300°C the window is narrow — keep malt at 0.1% maximum.`,
+      );
+    }
   }
 
   // 4D — Stability
