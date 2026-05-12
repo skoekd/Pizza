@@ -13,19 +13,19 @@ function bakeDuration(floorTempC: number): { duration: string; lookFor: string }
   if (floorTempC >= 460) {
     return {
       duration: '60–90 seconds',
-      lookFor: 'STG Neapolitan profile. Rim inflates fast. Leopard spots appear in 40–50s. Rotate once at 30s.',
+      lookFor: 'STG Neapolitan profile — soft, yielding, charred spots. Not the canotto crunch target.',
     };
   }
-  if (floorTempC >= 420) {
+  if (floorTempC >= 400) {
     return {
       duration: '90–150 seconds',
-      lookFor: 'Rim inflates rapidly in first 40s. Leopard spots on cornicione. Hollow tap sound when done. Rotate at 45s.',
+      lookFor: 'Classic Neapolitan range — leopard spots, softer centre. If targeting canotto crunch, reduce floor to 360–390°C for a longer, more even bake.',
     };
   }
   if (floorTempC >= 360) {
     return {
       duration: '3–5 minutes',
-      lookFor: 'Lower temp = more even browning, deeper crunch. Rotate every 60–90s. Look for deep amber-brown cornicione with even colour, not just leopard spots. Base should be firm and crisp throughout.',
+      lookFor: 'Contemporary canotto profile. Rotate every 60–90s. Look for deep amber-brown cornicione with even colour throughout — not just leopard spots. Base should be firm and crisp when tapped.',
     };
   }
   if (floorTempC >= 280) {

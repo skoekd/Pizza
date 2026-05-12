@@ -161,12 +161,12 @@ export function buildWarnings(
       `A home oven without a baking steel or stone cannot reliably achieve canotto crunch. Strongly recommend a baking steel (preferred) or cordierite stone. Preheat minimum 60 minutes.`,
     );
   }
-  if (toC(inputs.floorTemp, inputs.tempUnit) > 450) {
+  if (toC(inputs.floorTemp, inputs.tempUnit) > 420) {
     push(
       'floor_too_hot',
       'warning',
-      'Floor temp > 450°C targets chewy Neapolitan',
-      `Floor temperature above 450°C is the STG Neapolitan profile — optimized for soft, chewy texture in 60-75s. For canotto crunch, reduce floor to 400-420°C and extend bake to 90-150s.`,
+      'Floor temp above canotto range',
+      `Above 420°C you are in classic Neapolitan territory — the faster bake produces leopard spots and a softer, more yielding cornicione rather than canotto crunch. For contemporary canotto, target 360–400°C and bake 3–5 minutes with rotation.`,
     );
   }
 
