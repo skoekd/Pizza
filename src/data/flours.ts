@@ -85,6 +85,20 @@ export const FLOUR_DATABASE: Flour[] = [
     canUseInBiga: true,
     canUseInRefresh: true,
   },
+  {
+    id: 'caputo_tipo1',
+    name: 'Caputo Tipo 1',
+    w: 250,
+    pl: 0.55,
+    protein: 13.0,
+    fn: 270,
+    stability: 7,
+    type: '1',
+    notes:
+      'Gap flour — acquire to unlock the high-char electric oven style. Lower FN (270) = active amylases = deep Maillard browning on the cornicione without burning sugars. P/L 0.55 preserves oven spring at 15-20% in refresh. Do not use in biga — enzyme activity too fast for long ferment.',
+    canUseInBiga: false,
+    canUseInRefresh: true,
+  },
 ];
 
 export const CUSTOM_FLOUR_TEMPLATE: Flour = {
@@ -148,5 +162,16 @@ export const CANOTTO_FRAMEWORKS = [
       'Biga: 100% Caputo Manitoba Oro · Refresh: 100% Caputo Nuvola. Blend W≈330, P/L≈0.53. Contemporary canotto — high yeast (0.8% IDY biga), 48h, oil in refresh. Maximum oven spring and open crumb.',
     bigaFlours: [{ id: 'caputo_manitoba', pct: 100 }],
     refreshFlours: [{ id: 'caputo_nuvola', pct: 100 }],
+  },
+  {
+    id: 'F',
+    name: 'Framework F — High-char electric oven (La 8 + Blue + Tipo 1)',
+    description:
+      'Biga: 100% La 8 Plus · Refresh: 80% Caputo Blue + 20% Caputo Tipo 1. Tipo 1 ash and low FN drive deep Maillard browning — targets the labellavitapizzeria charred cornicione style. Electric oven 320–380°C. Requires Caputo Tipo 1 (gap flour).',
+    bigaFlours: [{ id: 'casillo_la8', pct: 100 }],
+    refreshFlours: [
+      { id: 'caputo_blue', pct: 80 },
+      { id: 'caputo_tipo1', pct: 20 },
+    ],
   },
 ];

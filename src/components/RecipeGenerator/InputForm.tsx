@@ -4,6 +4,31 @@ import { FLOUR_DATABASE, CANOTTO_FRAMEWORKS } from '../../data/flours';
 import { FieldRow, SectionHeading } from '../shared/FieldRow';
 import { calcBigaYeastPct, round1 } from '../../lib/calculations';
 
+const PANTRY_KEY = 'pizza_pantry_v1';
+const DEFAULT_PANTRY = ['caputo_blue', 'casillo_aroma', 'casillo_superiore', 'casillo_la8'];
+
+function loadPantry(): Set<string> {
+  try {
+    const raw = localStorage.getItem(PANTRY_KEY);
+    if (raw) return new Set(JSON.parse(raw) as string[]);
+  } catch { /* ignore */ }
+  return new Set(DEFAULT_PANTRY);
+}
+
+function savePantry(s: Set<string>) {
+  localStorage.setItem(PANTRY_KEY, JSON.stringify([...s]));
+}
+
+function frameworkMissing(fw: typeof CANOTTO_FRAMEWORKS[0], pantry: Set<string>): string[] {
+  const ids = new Set([
+    ...fw.bigaFlours.map((f) => f.id),
+    ...fw.refreshFlours.map((f) => f.id),
+  ]);
+  return [...ids]
+    .filter((id) => !pantry.has(id))
+    .map((id) => FLOUR_DATABASE.find((f) => f.id === id)?.name ?? id);
+}
+
 const DEFAULT_INPUTS: UserInputs = {
   tempUnit: 'C',
   ambientTemp: 22,
@@ -45,6 +70,16 @@ export function InputForm({ onCalculate }: Props) {
   const [inputs, setInputs] = useState<UserInputs>(DEFAULT_INPUTS);
   const [flourSum, setFlourSum] = useState(100);
   const [selectedFramework, setSelectedFramework] = useState<string | null>(null);
+  const [pantry, setPantry] = useState<Set<string>>(loadPantry);
+
+  function togglePantry(id: string) {
+    setPantry((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      savePantry(next);
+      return next;
+    });
+  }
 
   function set<K extends keyof UserInputs>(key: K, value: UserInputs[K]) {
     setInputs((prev) => ({ ...prev, [key]: value }));
@@ -116,6 +151,8 @@ export function InputForm({ onCalculate }: Props) {
         <div className="grid grid-cols-1 gap-2">
           {CANOTTO_FRAMEWORKS.map((fw) => {
             const isActive = selectedFramework === fw.id;
+            const missing = frameworkMissing(fw, pantry);
+            const ready = missing.length === 0;
             return (
               <button
                 key={fw.id}
@@ -130,11 +167,25 @@ export function InputForm({ onCalculate }: Props) {
                   <div className={`text-sm font-medium ${isActive ? 'text-amber-300' : 'text-stone-200 group-hover:text-amber-300'}`}>
                     {fw.name}
                   </div>
-                  {isActive && (
-                    <span className="text-xs text-amber-400 shrink-0">✓ Applied</span>
-                  )}
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    {isActive && <span className="text-xs text-amber-400">✓ Applied</span>}
+                    {ready ? (
+                      <span className="text-xs bg-emerald-900/50 text-emerald-400 border border-emerald-700/50 px-1.5 py-0.5 rounded">
+                        Ready
+                      </span>
+                    ) : (
+                      <span className="text-xs bg-stone-800 text-amber-500/80 border border-amber-700/30 px-1.5 py-0.5 rounded">
+                        Gap
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <div className="text-xs text-stone-500 mt-0.5">{fw.description}</div>
+                {!ready && (
+                  <div className="text-xs text-amber-600/80 mt-1">
+                    Missing: {missing.join(', ')}
+                  </div>
+                )}
               </button>
             );
           })}
@@ -217,9 +268,11 @@ export function InputForm({ onCalculate }: Props) {
 
         {/* Flour reference */}
         <div className="mt-4 overflow-x-auto">
+          <p className="text-xs text-stone-500 mb-2">Toggle the checkbox to mark flours you own — frameworks update automatically.</p>
           <table className="w-full text-xs">
             <thead>
               <tr className="text-stone-500">
+                <th className="text-center py-1 pr-2 w-6">Own</th>
                 <th className="text-left py-1 pr-3">Flour</th>
                 <th className="text-center py-1 px-2">W</th>
                 <th className="text-center py-1 px-2">P/L</th>
@@ -229,19 +282,33 @@ export function InputForm({ onCalculate }: Props) {
               </tr>
             </thead>
             <tbody>
-              {FLOUR_DATABASE.map(f => (
-                <tr key={f.id} className="border-t border-stone-800">
-                  <td className="py-1.5 pr-3 text-stone-300 font-medium whitespace-nowrap">{f.name}</td>
-                  <td className="text-center py-1.5 px-2 font-mono text-stone-300">{f.w}</td>
-                  <td className="text-center py-1.5 px-2 font-mono text-stone-300">{f.pl.toFixed(2)}</td>
-                  <td className="text-center py-1.5 px-2 font-mono text-stone-300">{f.fn}</td>
-                  <td className="text-center py-1.5 px-2 text-stone-400">{f.type}</td>
-                  <td className="py-1.5 pl-2 text-stone-500">
-                    {!f.canUseInBiga && f.canUseInRefresh ? 'Refresh only' :
-                     f.canUseInBiga && f.canUseInRefresh ? 'Biga or refresh' : '—'}
-                  </td>
-                </tr>
-              ))}
+              {FLOUR_DATABASE.map(f => {
+                const owned = pantry.has(f.id);
+                return (
+                  <tr key={f.id} className={`border-t border-stone-800 ${owned ? '' : 'opacity-50'}`}>
+                    <td className="text-center py-1.5 pr-2">
+                      <input
+                        type="checkbox"
+                        checked={owned}
+                        onChange={() => togglePantry(f.id)}
+                        className="w-3.5 h-3.5 accent-amber-500 cursor-pointer"
+                      />
+                    </td>
+                    <td className="py-1.5 pr-3 font-medium whitespace-nowrap">
+                      <span className={owned ? 'text-stone-300' : 'text-stone-500'}>{f.name}</span>
+                      {!owned && <span className="ml-1.5 text-amber-600/70 text-[10px]">gap</span>}
+                    </td>
+                    <td className="text-center py-1.5 px-2 font-mono text-stone-300">{f.w}</td>
+                    <td className="text-center py-1.5 px-2 font-mono text-stone-300">{f.pl.toFixed(2)}</td>
+                    <td className="text-center py-1.5 px-2 font-mono text-stone-300">{f.fn}</td>
+                    <td className="text-center py-1.5 px-2 text-stone-400">{f.type}</td>
+                    <td className="py-1.5 pl-2 text-stone-500">
+                      {!f.canUseInBiga && f.canUseInRefresh ? 'Refresh only' :
+                       f.canUseInBiga && f.canUseInRefresh ? 'Biga or refresh' : '—'}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
