@@ -39,8 +39,8 @@ export const FLOUR_DATABASE: Flour[] = [
     stability: 9,
     type: '00',
     notes:
-      'Ideal refresh flour for canotto. High FN suits long biga cold ferment. Too weak (W270) for biga lasting 18h+ — use as refresh only.',
-    canUseInBiga: false,
+      'Ideal refresh flour for canotto. In 100% biga (Adam/Gozney-style), works at 44–46% biga hydration, 18°C, 18–20h — keep total timeline ≤24h. Too weak for 48h+ biga or mixed-blend biga use. High FN suits long cold retard in refresh-only role.',
+    canUseInBiga: true,
     canUseInRefresh: true,
   },
   {
@@ -135,10 +135,18 @@ export const CANOTTO_FRAMEWORKS = [
   },
   {
     id: 'D',
-    name: 'Framework D — 100% Biga',
+    name: 'Framework D — 100% Biga (La 8 Plus)',
     description:
       'All flour in biga as La 8 Plus at 44-48% hydration. Refresh = water + salt only. Maximum flavor complexity, tightest margin. For experienced bakers, 48-72h.',
     bigaFlours: [{ id: 'casillo_la8', pct: 100 }],
+    refreshFlours: [],
+  },
+  {
+    id: 'F',
+    name: 'Framework F — 100% Biga (Caputo Blue · Adam/Gozney-style)',
+    description:
+      'All flour as Caputo Blue at 44–46% biga hydration, 18°C, 18–20h. Refresh = water + salt only. Target total hydration 65–68%. W270 demands cool biga temp and ≤24h timeline — unforgiving but delivers exceptional flavor from a single accessible flour.',
+    bigaFlours: [{ id: 'caputo_blue', pct: 100 }],
     refreshFlours: [],
   },
   {

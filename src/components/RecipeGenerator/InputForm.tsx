@@ -53,10 +53,10 @@ export function InputForm({ onCalculate }: Props) {
   function applyFramework(fwId: string) {
     const fw = CANOTTO_FRAMEWORKS.find((f) => f.id === fwId);
     if (!fw) return;
-    const bigaPct = fwId === 'D' ? 100 : inputs.bigaPct;
+    const bigaPct = (fwId === 'D' || fwId === 'F') ? 100 : inputs.bigaPct;
     const entries: FlourEntry[] = [];
 
-    if (fwId === 'D') {
+    if (fwId === 'D' || fwId === 'F') {
       entries.push({ flourId: fw.bigaFlours[0].id, percentage: 100 });
     } else {
       const bigaDec = bigaPct / 100;

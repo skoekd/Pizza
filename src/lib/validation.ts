@@ -54,7 +54,15 @@ export function buildWarnings(
       `This flour blend (W ${blend.w}) is too weak for a 72h process. Maximum recommended: 24-36h. Use W 330+ for 72h.`,
     );
   }
-  if (blend.w < 300 && inputs.timeline > 36 && inputs.timeline <= 60) {
+  if (blend.w < 280 && inputs.bigaPct >= 100 && inputs.timeline > 24) {
+    push(
+      'w_blue_100biga_long',
+      'warning',
+      'Caputo Blue 100% biga: keep timeline ≤24h',
+      `W270 (Caputo Blue) handles a 100% biga well at 18°C for 18–20h, but the gluten network degrades beyond 24h total. Reduce timeline to 18–24h or switch to a W330+ flour for longer processes.`,
+    );
+  }
+  if (blend.w < 300 && inputs.timeline > 36 && inputs.timeline <= 60 && inputs.bigaPct < 100) {
     push(
       'w_marginal_48',
       'warning',
@@ -114,7 +122,10 @@ export function buildWarnings(
 
   // 4E — Hydration
   const maxHyd = hydrationCeiling(blend.w, inputs.bigaPct);
-  if (inputs.totalHydration > maxHyd + 3) {
+  // 100% biga pre-develops gluten at low hydration — remaining water is absorbed by an
+  // already-structured dough, so the effective ceiling is higher (+8 vs +3 for partial biga).
+  const hydThreshold = inputs.bigaPct >= 100 ? maxHyd + 8 : maxHyd + 3;
+  if (inputs.totalHydration > hydThreshold) {
     push(
       'hydration_too_high',
       'warning',

@@ -261,6 +261,7 @@ export function ballToDisc(ballWeightG: number): string {
 
 export function detectFramework(entries: FlourEntry[], bigaPct: number): string {
   const ids = entries.map((e) => e.flourId).sort().join(',');
+  if (bigaPct === 100 && ids.includes('caputo_blue') && !ids.includes('casillo_la8')) return 'F';
   if (bigaPct === 100) return 'D';
   if (ids.includes('casillo_la8') && ids.includes('caputo_blue') && !ids.includes('casillo_aroma')) return 'A';
   if (ids.includes('casillo_la8') && ids.includes('casillo_superiore') && !ids.includes('caputo_blue')) return 'B';
